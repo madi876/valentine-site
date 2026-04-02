@@ -24,35 +24,29 @@ body {
     color: white;
 }
 
-/* Floating hearts in background */
+/* Background hearts */
 .bg-hearts span {
     position: absolute;
     font-size: 20px;
-    animation: float 8s linear infinite;
     opacity: 0.6;
+    animation: float linear infinite;
 }
 
 @keyframes float {
-    from {
-        transform: translateY(100vh);
-    }
-    to {
-        transform: translateY(-10vh);
-    }
+    from { transform: translateY(100vh); }
+    to { transform: translateY(-10vh); }
 }
 
-/* Center container */
+/* Center content */
 .container {
     z-index: 2;
 }
 
-/* Question */
 h1 {
-    font-size: 32px;
+    font-size: 30px;
     margin-bottom: 20px;
 }
 
-/* Buttons */
 .buttons {
     display: flex;
     justify-content: center;
@@ -66,20 +60,12 @@ button {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
-#yesBtn {
-    background: green;
-    color: white;
-}
+#yesBtn { background: green; color: white; }
+#noBtn { background: red; color: white; }
 
-#noBtn {
-    background: red;
-    color: white;
-}
-
-/* Emoji rain */
+/* emoji rain */
 @keyframes fall {
     to {
         transform: translateY(100vh);
@@ -91,11 +77,11 @@ button {
 
 <body>
 
-<!-- Background hearts -->
+<!-- Hearts -->
 <div class="bg-hearts" id="bgHearts"></div>
 
-<div class="container">
-    <h1 id="question">Will you be my Valentine, Sarah (moto😌)? ❤️</h1>
+<div class="container" id="mainContent">
+    <h1>Will you be my Valentine, Sarah (moto😌)? ❤️</h1>
 
     <div class="buttons">
         <button id="yesBtn" onclick="yesClicked()">Yes 💚</button>
@@ -113,33 +99,30 @@ let noCount = 0;
 
 const messages = [
     "Think again ❤️",
-    "Please motoo 🥺",
-    "Please say yes… ab th khana b bna leta 😋❤️",
+    "Motoo soch leee 🥺",
+    "Please say yes… hun tay khana v bna lenda 😋❤️",
     "Don’t break my heart 😭",
-    "You’ll make me the happiest person 💕",
-    "I’ll treat you like a queen 👑",
+    "Dekh le mere jysa cool bnda tno nai milna🥰",
+    "I’ll treat you like a princies 👑",
     "Please say yes 😭❤️",
     "Last chance 🥺❤️"
 ];
 
-// Play music on first interaction (Android/iPhone fix)
-document.addEventListener("click", function () {
-    let music = document.getElementById("bgMusic");
-    music.play();
+// Force music start (for mobile)
+document.addEventListener("click", () => {
+    document.getElementById("bgMusic").play();
 }, { once: true });
 
-// NO button logic
+// NO button
 function noClicked() {
     noCount++;
 
     let yesBtn = document.getElementById("yesBtn");
     let noBtn = document.getElementById("noBtn");
 
-    // Increase YES size
     let size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
     yesBtn.style.fontSize = (size + 5) + "px";
 
-    // Change NO text
     if (noCount <= messages.length) {
         noBtn.innerText = messages[noCount - 1];
     } else {
@@ -147,28 +130,40 @@ function noClicked() {
     }
 }
 
-// YES button logic
+// YES button
 function yesClicked() {
 
-    // Jump music to mid-point
     let music = document.getElementById("bgMusic");
-    music.currentTime = 45; // change this to your preferred time
-    music.play();
 
-    alert("nai krna tha yes 😂 Chal hun ftafat ok kr");
+    // Jump to mid (peak moment)
+    music.currentTime = 45;
+    music.play();
 
     document.body.innerHTML = "";
 
     let msg = document.createElement("div");
-    msg.style.fontSize = "40px";
-    msg.style.marginTop = "100px";
-    msg.innerHTML = "Mno tay phle e pta c  😍❤️<br>toh mno pyar krdi  💕😘<br> i know mein hun e pyara lkin sory i have a gf 😌";
+    msg.style.fontSize = "35px";
+    msg.style.marginTop = "80px";
+    msg.innerHTML = "Mno ty phle e pata c k toh mno pyar krdi😍❤️<br>I Love youuu 2 mri Jan 💕😘<br>But sory i have a gf sory sarah🥺<br>lkin ab soch ra gf koo chor diya jay🥱☺️  ";
 
     document.body.appendChild(msg);
 
+    // Back button
+    let backBtn = document.createElement("button");
+    backBtn.innerText = "Go Back 🔙";
+    backBtn.style.marginTop = "30px";
+    backBtn.style.padding = "10px 20px";
+    backBtn.style.border = "none";
+    backBtn.style.borderRadius = "8px";
+    backBtn.style.background = "black";
+    backBtn.style.color = "white";
+
+    backBtn.onclick = () => location.reload();
+
+    document.body.appendChild(backBtn);
+
     const emojis = ["❤️","💕","💋","💖","😘","😍","🎉","🥰","💘","💋"];
 
-    // FULL SCREEN emoji rain
     setInterval(() => {
         let drop = document.createElement("div");
         drop.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
@@ -183,24 +178,25 @@ function yesClicked() {
 
         setTimeout(() => drop.remove(), 4000);
 
-    }, 120);
+    }, 100);
 }
 
-// BACKGROUND floating hearts
+// INSTANT hearts (no delay)
 function createHearts() {
     const container = document.getElementById("bgHearts");
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 40; i++) {
         let heart = document.createElement("span");
         heart.innerHTML = "❤️";
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+        heart.style.animationDuration = (4 + Math.random() * 4) + "s";
         heart.style.fontSize = (15 + Math.random() * 20) + "px";
 
         container.appendChild(heart);
     }
 }
 
+// run immediately
 createHearts();
 </script>
 
