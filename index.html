@@ -33,8 +33,8 @@ body {
 }
 
 @keyframes float {
-    from { transform: translateY(100vh); }
-    to { transform: translateY(-10vh); }
+    from { transform: translateY(-10vh); } /* start at top */
+    to { transform: translateY(100vh); }  /* fall down */
 }
 
 /* Center content */
@@ -108,10 +108,14 @@ const messages = [
     "Last chance 🥺❤️"
 ];
 
-// Force music start (for mobile)
-document.addEventListener("click", () => {
-    document.getElementById("bgMusic").play();
-}, { once: true });
+// Force music start immediately (for mobile)
+window.addEventListener("load", () => {
+    const music = document.getElementById("bgMusic");
+    music.play().catch(() => {
+        // for mobile restrictions, play on first touch
+        document.addEventListener("click", () => music.play(), { once: true });
+    });
+});
 
 // NO button
 function noClicked() {
@@ -132,8 +136,7 @@ function noClicked() {
 
 // YES button
 function yesClicked() {
-
-    let music = document.getElementById("bgMusic");
+    const music = document.getElementById("bgMusic");
 
     // Jump to mid (peak moment)
     music.currentTime = 45;
@@ -181,7 +184,7 @@ function yesClicked() {
     }, 100);
 }
 
-// INSTANT hearts (no delay)
+// INSTANT hearts (fall top → down)
 function createHearts() {
     const container = document.getElementById("bgHearts");
 
