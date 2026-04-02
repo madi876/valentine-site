@@ -6,83 +6,32 @@
 <title>For Sarah ❤️</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-body {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    overflow: hidden;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3, #ffb199);
-    color: white;
-}
+* { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+body { height:100vh; display:flex; justify-content:center; align-items:center; text-align:center; overflow:hidden; background:linear-gradient(135deg, #ff758c, #ff7eb3, #ffb199); color:white; }
 
 /* Background hearts */
-.bg-hearts span {
-    position: absolute;
-    font-size: 20px;
-    opacity: 0.6;
-    animation: float linear infinite;
-}
-
-@keyframes float {
-    from { transform: translateY(-10vh); } /* start at top */
-    to { transform: translateY(100vh); }  /* fall down */
-}
+.bg-hearts span { position:absolute; font-size:20px; opacity:0.6; animation:float linear infinite; }
+@keyframes float { from { transform: translateY(-10vh); } to { transform: translateY(100vh); } }
 
 /* Center content */
-.container {
-    z-index: 2;
-}
-
-h1 {
-    font-size: 30px;
-    margin-bottom: 20px;
-}
-
-.buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-button {
-    padding: 15px 30px;
-    font-size: 18px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-#yesBtn { background: green; color: white; }
-#noBtn { background: red; color: white; }
+.container { z-index:2; }
+h1 { font-size:30px; margin-bottom:20px; }
+.buttons { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }
+button { padding:15px 30px; font-size:18px; border:none; border-radius:10px; cursor:pointer; }
+#yesBtn { background:green; color:white; } 
+#noBtn { background:red; color:white; }
 
 /* emoji rain */
-@keyframes fall {
-    to {
-        transform: translateY(100vh);
-        opacity: 0;
-    }
-}
+@keyframes fall { to { transform:translateY(100vh); opacity:0; } }
 </style>
 </head>
 
 <body>
 
-<!-- Hearts -->
 <div class="bg-hearts" id="bgHearts"></div>
 
 <div class="container" id="mainContent">
     <h1>Will you be my Valentine, Sarah (moto😌)? ❤️</h1>
-
     <div class="buttons">
         <button id="yesBtn" onclick="yesClicked()">Yes 💚</button>
         <button id="noBtn" onclick="noClicked()">No ❤️</button>
@@ -90,7 +39,7 @@ button {
 </div>
 
 <!-- Music -->
-<audio id="bgMusic" autoplay loop>
+<audio id="bgMusic" autoplay loop muted>
     <source src="love.mp3" type="audio/mpeg">
 </audio>
 
@@ -108,38 +57,28 @@ const messages = [
     "Last chance 🥺❤️"
 ];
 
-// Force music start immediately (for mobile)
+// --- Force music to play immediately ---
 window.addEventListener("load", () => {
     const music = document.getElementById("bgMusic");
-    music.play().catch(() => {
-        // for mobile restrictions, play on first touch
-        document.addEventListener("click", () => music.play(), { once: true });
-    });
+    music.muted = false;  // unmute immediately
+    music.play().catch(err => console.log("Autoplay blocked, waiting for first tap"));
 });
 
 // NO button
 function noClicked() {
     noCount++;
-
     let yesBtn = document.getElementById("yesBtn");
     let noBtn = document.getElementById("noBtn");
-
     let size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
     yesBtn.style.fontSize = (size + 5) + "px";
-
-    if (noCount <= messages.length) {
-        noBtn.innerText = messages[noCount - 1];
-    } else {
-        noBtn.innerText = "Still no? 😭💔";
-    }
+    if (noCount <= messages.length) noBtn.innerText = messages[noCount-1];
+    else noBtn.innerText = "Still no? 😭💔";
 }
 
 // YES button
 function yesClicked() {
     const music = document.getElementById("bgMusic");
-
-    // Jump to mid (peak moment)
-    music.currentTime = 45;
+    music.currentTime = 45; // jump to mid-song
     music.play();
 
     document.body.innerHTML = "";
@@ -147,11 +86,10 @@ function yesClicked() {
     let msg = document.createElement("div");
     msg.style.fontSize = "35px";
     msg.style.marginTop = "80px";
-    msg.innerHTML = "Mno ty phle e pata c k toh mno pyar krdi😍❤️<br>I Love youuu 2 mri Jan 💕😘<br>But sory i have a gf sory sarah🥺<br>lkin ab soch ra gf koo chor diya jay🥱☺️  ";
+    msg.innerHTML = "Mno ty phle e pata c k toh mno pyar krdi😍❤️<br>I Love youuu 2 mri Jan 💕😘<br>But sory i have a gf sory sarah🥺<br>lkin ab soch ra gf koo chor diya jay🥱☺️";
 
     document.body.appendChild(msg);
 
-    // Back button
     let backBtn = document.createElement("button");
     backBtn.innerText = "Go Back 🔙";
     backBtn.style.marginTop = "30px";
@@ -160,46 +98,36 @@ function yesClicked() {
     backBtn.style.borderRadius = "8px";
     backBtn.style.background = "black";
     backBtn.style.color = "white";
-
     backBtn.onclick = () => location.reload();
-
     document.body.appendChild(backBtn);
 
     const emojis = ["❤️","💕","💋","💖","😘","😍","🎉","🥰","💘","💋"];
-
     setInterval(() => {
         let drop = document.createElement("div");
-        drop.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-
+        drop.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
         drop.style.position = "fixed";
-        drop.style.left = Math.random() * window.innerWidth + "px";
-        drop.style.top = "-50px";
-        drop.style.fontSize = (20 + Math.random() * 25) + "px";
-        drop.style.animation = "fall 4s linear";
-
+        drop.style.left = Math.random()*window.innerWidth+"px";
+        drop.style.top="-50px";
+        drop.style.fontSize=(20+Math.random()*25)+"px";
+        drop.style.animation="fall 4s linear";
         document.body.appendChild(drop);
-
-        setTimeout(() => drop.remove(), 4000);
-
+        setTimeout(()=>drop.remove(),4000);
     }, 100);
 }
 
-// INSTANT hearts (fall top → down)
+// --- Hearts falling top → bottom ---
 function createHearts() {
     const container = document.getElementById("bgHearts");
-
-    for (let i = 0; i < 40; i++) {
-        let heart = document.createElement("span");
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = (4 + Math.random() * 4) + "s";
-        heart.style.fontSize = (15 + Math.random() * 20) + "px";
-
+    for(let i=0;i<40;i++){
+        let heart=document.createElement("span");
+        heart.innerHTML="❤️";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.animationDuration=(4+Math.random()*4)+"s";
+        heart.style.fontSize=(15+Math.random()*20)+"px";
         container.appendChild(heart);
     }
 }
 
-// run immediately
 createHearts();
 </script>
 
