@@ -4,18 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For Sarah ❤️</title>
-
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
 body { height:100vh; display:flex; justify-content:center; align-items:center; text-align:center; overflow:hidden; background:linear-gradient(135deg, #ff758c, #ff7eb3, #ffb199); color:white; }
 .bg-hearts span { position:absolute; font-size:20px; opacity:0.6; animation:float linear infinite; }
 @keyframes float { from { transform: translateY(-10vh); } to { transform: translateY(100vh); } }
-.container { z-index:2; }
+.container { z-index:2; transition: opacity 0.5s; }
 h1 { font-size:30px; margin-bottom:20px; }
 .buttons { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }
 button { padding:15px 30px; font-size:18px; border:none; border-radius:10px; cursor:pointer; }
 #yesBtn { background:green; color:white; } 
 #noBtn { background:red; color:white; }
+#backBtn { display:none; background:black; color:white; margin-top:30px; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; }
 @keyframes fall { to { transform:translateY(100vh); opacity:0; } }
 </style>
 </head>
@@ -26,10 +26,12 @@ button { padding:15px 30px; font-size:18px; border:none; border-radius:10px; cur
 <div class="container" id="mainContent">
     <h1>Will you be my Valentine, Sarah (moto😌)? ❤️</h1>
     <div class="buttons">
-        <button id="yesBtn" onclick="yesClicked()">Yes 💚</button>
-        <button id="noBtn" onclick="noClicked()">No ❤️</button>
+        <button id="yesBtn">Yes 💚</button>
+        <button id="noBtn">No ❤️</button>
     </div>
 </div>
+
+<button id="backBtn">Go Back 🔙</button>
 
 <!-- Persistent Music -->
 <audio id="bgMusic" autoplay loop muted>
@@ -38,7 +40,14 @@ button { padding:15px 30px; font-size:18px; border:none; border-radius:10px; cur
 
 <script>
 let noCount = 0;
-let savedTime = 0; // save music position
+let savedTime = 0;
+
+const music = document.getElementById("bgMusic");
+const mainContent = document.getElementById("mainContent");
+const backBtn = document.getElementById("backBtn");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+
 const messages = [
     "Think again ❤️",
     "Motoo soch leee 🥺",
@@ -50,55 +59,45 @@ const messages = [
     "Last chance 🥺❤️"
 ];
 
-// --- Music setup ---
-const music = document.getElementById("bgMusic");
+// --- Auto play music on load ---
 window.addEventListener("load", () => {
-    music.muted = false; // unmute
+    music.muted = false;
     music.play().catch(() => {
         document.addEventListener("click", () => music.play(), { once: true });
     });
 });
 
-// NO button
-function noClicked() {
+// --- NO button ---
+noBtn.addEventListener("click", () => {
     noCount++;
-    let yesBtn = document.getElementById("yesBtn");
-    let noBtn = document.getElementById("noBtn");
     let size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
     yesBtn.style.fontSize = (size + 5) + "px";
     if (noCount <= messages.length) noBtn.innerText = messages[noCount-1];
     else noBtn.innerText = "Still no? 😭💔";
-}
+});
 
-// YES button
-function yesClicked() {
-    // Save current position if returning
-    if (savedTime === 0) music.currentTime = 45; // first YES jump to mid-song
-    else music.currentTime = savedTime; // subsequent YES resumes
+// --- YES button ---
+yesBtn.addEventListener("click", () => {
+    // Save current position if already pressed YES before
+    if (savedTime === 0) music.currentTime = 45; // first YES jumps
+    else music.currentTime = savedTime;
     music.play();
 
-    document.body.innerHTML = "";
+    // Hide main content instead of removing body
+    mainContent.style.display = "none";
 
-    let msg = document.createElement("div");
-    msg.style.fontSize = "35px";
-    msg.style.marginTop = "80px";
-    msg.innerHTML = "Mno ty phle e pata c k toh mno pyar krdi😍❤️<br>I Love youuu 2 mri Jan 💕😘<br>But sory i have a gf sory sarah🥺<br>lkin ab soch ra gf koo chor diya jay🥱☺️";
-    document.body.appendChild(msg);
+    // Show YES message
+    let msgDiv = document.createElement("div");
+    msgDiv.id = "yesMessage";
+    msgDiv.style.fontSize = "35px";
+    msgDiv.style.marginTop = "80px";
+    msgDiv.innerHTML = "Mno ty phle e pata c k toh mno pyar krdi😍❤️<br>I Love youuu 2 mri Jan 💕😘<br>But sory i have a gf sory sarah🥺<br>lkin ab soch ra gf koo chor diya jay🥱☺️";
+    document.body.appendChild(msgDiv);
 
-    let backBtn = document.createElement("button");
-    backBtn.innerText = "Go Back 🔙";
-    backBtn.style.marginTop = "30px";
-    backBtn.style.padding = "10px 20px";
-    backBtn.style.border = "none";
-    backBtn.style.borderRadius = "8px";
-    backBtn.style.background = "black";
-    backBtn.style.color = "white";
-    backBtn.onclick = () => {
-        savedTime = music.currentTime; // save music position before going back
-        location.reload();
-    };
-    document.body.appendChild(backBtn);
+    // Show back button
+    backBtn.style.display = "inline-block";
 
+    // Emoji rain
     const emojis = ["❤️","💕","💋","💖","😘","😍","🎉","🥰","💘","💋"];
     setInterval(() => {
         let drop = document.createElement("div");
@@ -111,9 +110,25 @@ function yesClicked() {
         document.body.appendChild(drop);
         setTimeout(()=>drop.remove(),4000);
     }, 100);
-}
+});
 
-// Hearts top → bottom
+// --- BACK button ---
+backBtn.addEventListener("click", () => {
+    // Save music position
+    savedTime = music.currentTime;
+    // Remove YES message
+    const msgDiv = document.getElementById("yesMessage");
+    if (msgDiv) msgDiv.remove();
+    // Show main content
+    mainContent.style.display = "flex";
+    // Hide back button
+    backBtn.style.display = "none";
+    // Resume music from saved position
+    music.currentTime = savedTime;
+    music.play();
+});
+
+// --- Hearts top → bottom ---
 function createHearts() {
     const container = document.getElementById("bgHearts");
     for(let i=0;i<40;i++){
@@ -127,6 +142,5 @@ function createHearts() {
 }
 createHearts();
 </script>
-
 </body>
 </html>
