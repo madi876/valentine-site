@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Sarah ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3, #ffb199);
+    color: white;
+}
+
+/* Floating hearts in background */
+.bg-hearts span {
+    position: absolute;
+    font-size: 20px;
+    animation: float 8s linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes float {
+    from {
+        transform: translateY(100vh);
+    }
+    to {
+        transform: translateY(-10vh);
+    }
+}
+
+/* Center container */
+.container {
+    z-index: 2;
+}
+
+/* Question */
+h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#yesBtn {
+    background: green;
+    color: white;
+}
+
+#noBtn {
+    background: red;
+    color: white;
+}
+
+/* Emoji rain */
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background hearts -->
+<div class="bg-hearts" id="bgHearts"></div>
+
+<div class="container">
+    <h1 id="question">Will you be my Valentine, Sarah (moto😌)? ❤️</h1>
+
+    <div class="buttons">
+        <button id="yesBtn" onclick="yesClicked()">Yes 💚</button>
+        <button id="noBtn" onclick="noClicked()">No ❤️</button>
+    </div>
+</div>
+
+<!-- Music -->
+<audio id="bgMusic" autoplay loop>
+    <source src="love.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let noCount = 0;
+
+const messages = [
+    "Think again ❤️",
+    "Please motoo 🥺",
+    "Please say yes… ab th khana b bna leta 😋❤️",
+    "Don’t break my heart 😭",
+    "You’ll make me the happiest person 💕",
+    "I’ll treat you like a queen 👑",
+    "Please say yes 😭❤️",
+    "Last chance 🥺❤️"
+];
+
+// Play music on first interaction (Android/iPhone fix)
+document.addEventListener("click", function () {
+    let music = document.getElementById("bgMusic");
+    music.play();
+}, { once: true });
+
+// NO button logic
+function noClicked() {
+    noCount++;
+
+    let yesBtn = document.getElementById("yesBtn");
+    let noBtn = document.getElementById("noBtn");
+
+    // Increase YES size
+    let size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+    yesBtn.style.fontSize = (size + 5) + "px";
+
+    // Change NO text
+    if (noCount <= messages.length) {
+        noBtn.innerText = messages[noCount - 1];
+    } else {
+        noBtn.innerText = "Still no? 😭💔";
+    }
+}
+
+// YES button logic
+function yesClicked() {
+
+    // Jump music to mid-point
+    let music = document.getElementById("bgMusic");
+    music.currentTime = 45; // change this to your preferred time
+    music.play();
+
+    alert("nai krna tha yes 😂 Chal hun ftafat ok kr");
+
+    document.body.innerHTML = "";
+
+    let msg = document.createElement("div");
+    msg.style.fontSize = "40px";
+    msg.style.marginTop = "100px";
+    msg.innerHTML = "Mno tay phle e pta c  😍❤️<br>toh mno pyar krdi  💕😘<br> i know mein hun e pyara lkin sory i have a gf 😌";
+
+    document.body.appendChild(msg);
+
+    const emojis = ["❤️","💕","💋","💖","😘","😍","🎉","🥰","💘","💋"];
+
+    // FULL SCREEN emoji rain
+    setInterval(() => {
+        let drop = document.createElement("div");
+        drop.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+
+        drop.style.position = "fixed";
+        drop.style.left = Math.random() * window.innerWidth + "px";
+        drop.style.top = "-50px";
+        drop.style.fontSize = (20 + Math.random() * 25) + "px";
+        drop.style.animation = "fall 4s linear";
+
+        document.body.appendChild(drop);
+
+        setTimeout(() => drop.remove(), 4000);
+
+    }, 120);
+}
+
+// BACKGROUND floating hearts
+function createHearts() {
+    const container = document.getElementById("bgHearts");
+
+    for (let i = 0; i < 25; i++) {
+        let heart = document.createElement("span");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+        heart.style.fontSize = (15 + Math.random() * 20) + "px";
+
+        container.appendChild(heart);
+    }
+}
+
+createHearts();
+</script>
+
+</body>
+</html>
